@@ -1,3 +1,15 @@
-.DS_Store
+# Node rules:
+## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+coverage
 node_modules
-dist
+package-lock.json
+dist*
+
+# Vim
+*.swp
+*.swo
+
+# Mac OS
+.DS_Store
