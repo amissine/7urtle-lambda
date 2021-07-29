@@ -2,10 +2,11 @@
 ## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
-coverage
 node_modules
+coverage
 package-lock.json
 dist*
+*/*.hidden.js
 
 # Vim
 *.swp
