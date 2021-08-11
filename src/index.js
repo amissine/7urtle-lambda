@@ -7,3 +7,5 @@ export * from './Maybe';
 export * from './Either';
 export * from './SyncEffect';
 export * from './AsyncEffect';
+
+export * from './arbitrage'

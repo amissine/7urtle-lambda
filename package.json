@@ -15,7 +15,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "node test/AsyncEffect.test.js",
+    "test": "node test/arbitrage.test.js",
     "pretest": "npm run build"
   },
   "files": [
