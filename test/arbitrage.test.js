@@ -1,6 +1,8 @@
 const λ = require('..')
 const data = require('./data.json')
 
+λ.log('- ' + λ.deepInspect(λ.feed) + ':\n')
+
 mockAsyncFeed(0)
 
 function mockAsyncFeed (index, qt, pt) {
