@@ -64,12 +64,9 @@ function spreadsAdd (item) {
                          p => p && AO(p[0], p[1]) ?? 0))
  where 
 
-   const pairs = (x, i) => {
-     const x2pair = Array.from(S, (x2p, j) => j > i ? x2p : undefined)
-     return Array.from(
+   const pairs = (x, i) => Array.from(
               Array.from(S, (x2p, j) => j > i ? x2p : undefined),
               x2p => x2p ? [x, x2p] : undefined)
-   }
 */
 function arbitrage () {
   if (spreads.length < 2) {
