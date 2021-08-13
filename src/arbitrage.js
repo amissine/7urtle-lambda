@@ -1,4 +1,4 @@
-import { log, deepInspect } from './utils'
+const log = console.log
 
 export const feed = item => {
   const id = item[0], qt = item[item.length - 2], pt = item[item.length - 1]
@@ -34,46 +34,44 @@ function spreadsAdd (item) {
   }
 }
 
-/*
- Arbitrage opportunities can be found on spreads from different exchanges, taken
- within a short timeframe < 1000 ms. For two exchanges x0 and x1, represented by
- their spreads
-
-   s0 = [x0, [maxBidPrice, maxBidAmount, …], [minAskPrice, minAskAmount, …]]
-
- and
-
-   s1 = [x1, [maxBidPrice, maxBidAmount, …], [minAskPrice, minAskAmount, …]]
-
- , AO can be defined as follows:
-
-   sTopBid = s0[1][0] > s1[1][0] ? s0 : s1
-   sBtmAsk = s0[2][0] < s1[2][0] ? s0 : s1
-
-   if (sTopBid[1][0] > sBtmAsk[2][0]) {
-
-     AO(s0, s1) = (sTopBid[1][0] - sBtmAsk[2][0])
-                  * Math.min(sTopBid[1][1], sBtmAsk[2][1])
-   }
-
- For N ≥ 2 exchanges, represented by their spreads S = [s0, s1, …, sNm1], AO can be
- defined as follows:
-
-   AO(N) = Math.max(...Array.from(
-                         Array.from(S, pairs), 
-                         p => p && AO(p[0], p[1]) ?? 0))
- where 
-
-   const pairs = (x, i) => Array.from(
-              Array.from(S, (x2p, j) => j > i ? x2p : undefined),
-              x2p => x2p ? [x, x2p] : undefined)
-*/
 function arbitrage () {
   if (spreads.length < 2) {
-    log('=== NO ARBITRAGE POSSIBLE ===')
+    log('=== NOTHING TO ARBITRAGE ===')
     spreads = []
     return;
   }
-  log('- ' + deepInspect(spreads))
+  //log(spreads)
+  log(`ao: ${ao()}\n`)
   spreads = []
+}
+
+const min = Math.min, max = Math.max, from = Array.from
+const pairs = (x, i) => from(
+  from(spreads, (x2p, j) => j > i ? x2p : undefined),
+  x2p => x2p ? [x, x2p] : undefined)
+const maxpairs = p => {
+  while (p[0] === undefined) {
+    p.shift()
+    if (p.length == 0) {
+      return 0;
+    }
+  }
+  return max(...from(p, c => ao(c[0], c[1]) ?? 0));
+}
+
+function ao (...args) {
+  if (args.length == 0) {
+    return max(...from(
+      from(spreads, pairs),
+      p => maxpairs(p)));
+  } else {
+    const sTopBid = args[0][1][0] > args[1][1][0] ? args[0] : args[1]
+    const sBtmAsk = args[0][2][0] < args[1][2][0] ? args[0] : args[1]
+
+    if (+sTopBid[1][0] > +sBtmAsk[2][0]) {
+      return (sTopBid[1][0] - sBtmAsk[2][0])
+             * min(+sTopBid[1][1], +sBtmAsk[2][1]);
+    }
+    return undefined;
+  }
 }
